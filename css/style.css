@@ -1,0 +1,187 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.hidden-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+
+.dark-mode {
+    background: #121212;
+    color: #f5f5f5;
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+}
+
+.todo-container {
+    background: #D9D9D9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    transition: background 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+
+.dark-mode .todo-container {
+    background: #1e1e1e;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    background: #f9f9f9;
+    color: #333;
+}
+
+.dark-mode input {
+    background: #2a2a2a;
+    color: #ddd;
+    border: 1px solid #444;
+}
+
+button {
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #eee;
+}
+
+.dark-mode button {
+    background: #333;
+    border: 1px solid #444;
+}
+
+.date-btn {
+    min-width: 40px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.dark-mode li {
+    border-bottom: 1px solid #444;
+}
+
+.task-text {
+    flex: 1;
+    padding: 8px 12px;
+    background: #fff;
+    color: #333;
+    border-radius: 8px;
+}
+
+.dark-mode .task-text {
+    background: #2a2a2a;
+    color: #ddd;
+}
+
+.completed {
+    background: #ccc;
+    color: #666;
+}
+
+.dark-mode .completed {
+    background: #444;
+    color: #888;
+}
+
+.overdue {
+    background: #ff4d4d;
+    color: white;
+}
+
+.deadline {
+    font-size: 12px;
+    color: #666;
+}
+
+.dark-mode .deadline {
+    color: #bbb;
+}
+
+.delete-btn {
+    background: white;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+
+.delete-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #888;
+    transition: fill 0.2s ease-in-out;
+}
+
+.dark-mode .delete-btn svg {
+    fill: #bbb;
+}
+
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.5);
+    margin-top: 10px;
+}
+
+.dark-mode .footer {
+    color: rgba(255, 255, 255, 0.5);
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO List</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body :class="{ 'dark-mode': isDark }">
+    <div id="app">
+        <h1>TODO LIST</h1>
+        <div class="todo-container">
+            <div class="input-group">
+                <input v-model="newTask" @keyup.enter="addTask" placeholder="Добавить задачу">
+                <button class="date-btn" @click="openDatePicker">📅</button>
+                <input type="datetime-local" v-model="newDeadline" ref="datePicker" class="hidden-input">
+                <button @click="addTask">+</button>
+            </div>            
+            <transition-group name="task">
+                <ul>
+                    <li v-for="(task, index) in tasks" :key="index">
+                        <span :class="['task-text', { completed: task.done, overdue: isOverdue(task) }]"
+                              @click="toggleTask(index)" v-if="!isOverdue(task)">
+                            {{ task.text }}
+                        </span>
+                        <span class="task-text overdue" v-else>
+                            {{ task.text }} (просрочено)
+                        </span>
+                        <span class="deadline" v-if="task.deadline">
+                            {{ formatDeadline(task.deadline) }}
+                        </span>
+                        <button @click="deleteTask(index)" class="delete-btn">
+                            𐄂
+                        </button>
+                    </li>
+                </ul>
+            </transition-group>
+            <div class="footer">made by tiltewww</div>
+        </div>
+    </div>
+</body>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="js/script.js"></script>
+</html>
