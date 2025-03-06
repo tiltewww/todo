@@ -5,40 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TODO List</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
-<body :class="{ 'dark-mode': isDark }">
+<body>
     <div id="app">
         <h1>TODO LIST</h1>
         <div class="todo-container">
             <div class="input-group">
                 <input v-model="newTask" @keyup.enter="addTask" placeholder="Добавить задачу">
-                <button class="date-btn" @click="openDatePicker">📅</button>
-                <input type="datetime-local" v-model="newDeadline" ref="datePicker" class="hidden-input">
+                <button class="date-btn" @click="showDatePicker = true">📅</button>
                 <button @click="addTask">+</button>
-            </div>            
-            <transition-group name="task">
-                <ul>
-                    <li v-for="(task, index) in tasks" :key="index">
-                        <span :class="['task-text', { completed: task.done, overdue: isOverdue(task) }]"
-                              @click="toggleTask(index)" v-if="!isOverdue(task)">
-                            {{ task.text }}
-                        </span>
-                        <span class="task-text overdue" v-else>
-                            {{ task.text }} (просрочено)
-                        </span>
-                        <span class="deadline" v-if="task.deadline">
-                            {{ formatDeadline(task.deadline) }}
-                        </span>
-                        <button @click="deleteTask(index)" class="delete-btn">
-                            𐄂
-                        </button>
-                    </li>
-                </ul>
-            </transition-group>
+            </div>
+            <ul>
+                <li v-for="(task, index) in tasks" :key="index">
+                    <span :class="['task-text', { completed: task.done, overdue: task.overdue }]"
+                          @click="toggleTask(index)" v-if="!task.overdue">
+                        {{ task.text }}
+                    </span>
+                    <span class="task-text overdue" v-else>
+                        {{ task.text }}
+                    </span>
+                    <span style="margin-left: 5px" class="deadline" v-if="task.deadline">
+                        {{ formatDeadline(task.deadline) }}
+                    </span>
+                    <button @click="deleteTask(index)" class="delete-btn">𐄂</button>
+                </li>
+            </ul>
             <div class="footer">made by tiltewww</div>
         </div>
+
+        <div v-if="showDatePicker" class="modal-overlay" @click.self="showDatePicker = false">
+            <div class="modal">
+                <h2>Выберите дату</h2>
+                <input type="date" v-model="selectedDate">
+                <input style="margin: 5px" type="time" v-model="selectedTime">
+                <div class="modal-buttons">
+                    <button @click="confirmDate">OK</button>
+                    <button @click="showDatePicker = false">Отмена</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="js/script.js"></script>
 </body>
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="js/script.js"></script>
 </html>

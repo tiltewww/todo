@@ -1,11 +1,13 @@
-"use strict";
 const app = Vue.createApp({
     data() {
         return {
             newTask: "",
             newDeadline: "",
+            selectedDate: "",
+            selectedTime: "",
+            showDatePicker: false,
             tasks: JSON.parse(localStorage.getItem("tasks")) || [],
-            isDark: window.matchMedia("(prefers-color-scheme: dark)").matches
+            isDark: JSON.parse(localStorage.getItem("darkMode")) ?? window.matchMedia("(prefers-color-scheme: dark)").matches
         };
     },
     watch: {
@@ -17,48 +19,74 @@ const app = Vue.createApp({
         },
         isDark(newValue) {
             document.body.classList.toggle("dark-mode", newValue);
-            localStorage.setItem("darkMode", newValue);
+            localStorage.setItem("darkMode", JSON.stringify(newValue));
         }
     },
     mounted() {
-        if (localStorage.getItem("darkMode") !== null) {
-            this.isDark = JSON.parse(localStorage.getItem("darkMode"));
-        }
         document.body.classList.toggle("dark-mode", this.isDark);
 
         window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
             this.isDark = e.matches;
         });
+
+        this.checkDeadlines();
+        setInterval(this.checkDeadlines, 60000);
     },
     methods: {
         addTask() {
             if (!this.newTask.trim()) return;
+
+            let finalDeadline = null;
+            if (this.selectedDate && this.selectedTime) {
+                finalDeadline = `${this.selectedDate}T${this.selectedTime}`;
+            } else if (this.selectedDate) {
+                finalDeadline = `${this.selectedDate}T23:59`;
+            } else if (this.selectedTime) {
+                const today = new Date().toISOString().split("T")[0];
+                finalDeadline = `${today}T${this.selectedTime}`;
+            }
+
             this.tasks.push({
                 text: this.newTask,
-                deadline: this.newDeadline || null,
+                deadline: finalDeadline,
                 done: false,
-                favorite: false
+                overdue: false
             });
+
             this.newTask = "";
+            this.selectedDate = "";
+            this.selectedTime = "";
             this.newDeadline = "";
+            this.showDatePicker = false;
+            this.checkDeadlines();
         },
         toggleTask(index) {
-            if (!this.isOverdue(this.tasks[index])) {
+            if (!this.tasks[index].overdue) {
                 this.tasks[index].done = !this.tasks[index].done;
             }
         },
         deleteTask(index) {
             this.tasks.splice(index, 1);
         },
-        openDatePicker() {
-            const datePicker = this.$refs.datePicker;
-            datePicker.showPicker ? datePicker.showPicker() : datePicker.focus();
+        confirmDate() {
+            this.showDatePicker = false;
         },
-        isOverdue(task) {
-            return task.deadline && new Date(task.deadline) < new Date();
+        checkDeadlines() {
+            const now = new Date();
+            this.tasks.forEach(task => {
+                if (task.deadline && new Date(task.deadline) < now) {
+                    task.overdue = true;
+                    task.done = false;
+                } else {
+                    task.overdue = false;
+                }
+            });
         },
         formatDeadline(date) {
-            return new Date(date).toLocaleString();
+            if (!date) return "Без дедлайна";
+            const deadlineDate = new Date(date);
+            const now = new Date();
+            return deadlineDate < now ? "Просрочено!" : deadlineDate.toLocaleString();
         }
     }
 });
