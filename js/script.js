@@ -72,7 +72,7 @@ const app = Vue.createApp({
             this.showDatePicker = false;
         },
         checkDeadlines() {
-            const now = new Date();
+            var now = new Date();
             this.tasks.forEach(task => {
                 if (task.deadline && new Date(task.deadline) < now) {
                     task.overdue = true;
@@ -84,8 +84,8 @@ const app = Vue.createApp({
         },
         formatDeadline(date) {
             if (!date) return "Без дедлайна";
-            const deadlineDate = new Date(date);
-            const now = new Date();
+            var deadlineDate = new Date(date);
+            var now = new Date();
             return deadlineDate < now ? "Просрочено!" : deadlineDate.toLocaleString();
         }
     }
